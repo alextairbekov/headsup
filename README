@@ -1,0 +1,5 @@
+To run:
+1. create a new virtualenv using python
+2. run pip install -r requirements.txt in the new virtualenv
+3. execute newvirtualenv/bin/python main.py to run the application
+4. Open http://localhost:5001/ in your browser once the server is running

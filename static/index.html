@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>HeadsUp! Visualization Demo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment-with-locales.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/4.2.5/highcharts.js"></script>
+  </head>
+  <body>
+    <div id="chart" style="height: 400px"></div>
+    <script type="text/javascript">
+$(document).ready(function() {
+  $.getJSON('http://headsup.d8u.us/api', function(data) {
+      var json_to_plot = [];
+      for (i = 0; i < 24; i++) { json_to_plot[i] = 0; }
+      for (i = 0; i < data.records.length; i++) {
+        var timestamp = parseFloat(data.records[i].timestamp);
+        hour = parseInt(moment(moment(timestamp)).format('H'));
+        json_to_plot[hour]++;
+      }
+      var chart = new Highcharts.Chart({
+        chart: {
+                 renderTo: 'chart',
+                 type: 'column',
+               },
+        title: { text: 'Comment length per hour for u/cruyff8', },
+        xAxis: { 
+          categories: function() {for (i = 0; i < 24; i++) { return i; }},
+          title: { text: 'Hour of day', },
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            text: 'Characters in comment',
+            align: 'low',
+          }
+        },
+        plotOptions: { bar: { dataLabels: { enabled: true } } },
+        series: [{name: 'Length of comments/hour (GMT)', data:json_to_plot }],
+      });});});
+    </script>
+</html>

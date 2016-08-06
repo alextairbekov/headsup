@@ -14,13 +14,11 @@ app = Flask(__name__)
 db = SQLAlchemy(app)
 
 class Record(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, db.Sequence('record_reg_id', start=1, increment=1), primary_key=True)
     key = db.Column(db.String(80), nullable=False)
     value = db.Column(db.String(80), nullable=False)
     record_source = db.Column(db.String(80), nullable=False)
 
-db.create_all()
-db.session.commit()
 
 @app.route("/api", methods=['GET'])
 def hello():
@@ -65,7 +63,13 @@ def root():
     return send_from_directory('static', 'index.html')
 
 if __name__ == '__main__':
-    logging.basicConfig(level=9999)
+    logging.basicConfig(level=logging.DEBUG)
+
+    # Recreate tables
+    db.drop_all()
+    db.create_all()
+    db.session.commit()
+
+    app.config.update(TESTING=True, DEBUG=True, JSONIFY_PRETTYPRINT_REGULAR=False, SQLALCHEMY_TRACK_MODIFICATIONS=False)
     get_comments()
-    app.config.update(TESTING=True, DEBUG=True, JSONIFY_PRETTYPRINT_REGULAR=False)
     app.run(port=5001, debug=True)

@@ -31,6 +31,17 @@ def hello():
     ret = {'records': [{'timestamp':r.key,'value': r.value} for r in records]}
     return jsonify(ret), 200
 
+@app.route('/api/new', methods=['POST'])
+def add_comment():
+    new_entry = Record(key = str(time.time()), value=len(request.args.get('comment')), record_source='comments for cruyff8')
+    logging.debug('new record constructed!')
+    db.session.add(new_entry)
+    logging.debug('new record added!')
+    db.session.commit()
+    logging.debug('new record committed!')
+    ret = {'Status': 'success!'}
+    return jsonify(ret), 201
+
 @app.route('/api', methods=['POST'])
 def hello_add(data=None):
     if data is None:

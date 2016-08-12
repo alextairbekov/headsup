@@ -18,6 +18,12 @@ db = SQLAlchemy(app)
 # Start redis instance with default parameters
 redis_instance = redis.StrictRedis(host='localhost', port=6379)
 
+class Record(db.Model):
+    id = db.Column(db.Integer, db.Sequence('record_reg_id', start=1, increment=1), primary_key=True)
+    key = db.Column(db.String(80), nullable=False)
+    value = db.Column(db.String(80), nullable=False)
+    record_source = db.Column(db.String(80), nullable=False)
+
 
 def filter_records_by(message):
     source = message['data']
@@ -47,11 +53,6 @@ def commit_new_record(message):
 db_subscriber = redis_instance.pubsub()
 db_subscriber.subscribe(**{'db-records-filter': filter_records_by, 'db-records-commit': commit_new_record})
 
-class Record(db.Model):
-    id = db.Column(db.Integer, db.Sequence('record_reg_id', start=1, increment=1), primary_key=True)
-    key = db.Column(db.String(80), nullable=False)
-    value = db.Column(db.String(80), nullable=False)
-    record_source = db.Column(db.String(80), nullable=False)
 
 
 @app.route("/api", methods=['GET'])

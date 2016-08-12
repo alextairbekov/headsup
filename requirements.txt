@@ -1,4 +1,4 @@
--sqlite3==0.0.0
+#sqlite3==0.0.0
 alembic==0.8.7
 click==6.6
 decorator==4.0.10
@@ -13,6 +13,7 @@ Mako==1.0.4
 MarkupSafe==0.23
 praw==3.5.0
 python-editor==1.0.1
+redis
 requests==2.10.0
 six==1.10.0
 SQLAlchemy==1.0.14

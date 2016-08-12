@@ -140,8 +140,9 @@ if __name__ == '__main__':
     db.session.commit()
 
     app.config.update(TESTING=True, DEBUG=True, JSONIFY_PRETTYPRINT_REGULAR=False, SQLALCHEMY_TRACK_MODIFICATIONS=False)
-    get_comments()
     app.run(port=5001, debug=True)
+
+    get_comments()
 
     for msg in db_subscriber.listen():
         # for each message we have set up a handler
